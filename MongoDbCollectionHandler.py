@@ -32,6 +32,18 @@ class MongoDbCollectionHandler:
 
         return json_objects
 
+    def findOne(self, query):
+        return self.collection.find_one(query)
+
+    def findMany(self, query):
+        json_objects = []
+
+        for item in self.collection.find(query):
+            json_objects.append(item)
+
+
+        return json_objects
+
 
     def addOneItem(self, item):
         self.collection.insert_one(item)

@@ -4,8 +4,11 @@ mongodbCollectionHandler = MongoDbCollectionHandler("mongodb+srv://user:netninja
                                 "practicingDb", "dbpracticecollections2")
 
 
-print(mongodbCollectionHandler.getAllItems())
-mongodbCollectionHandler.addManyItems([
-    {"title":"lmaoo"},
-    {"title":"ok lol"}
-])
+# print(mongodbCollectionHandler.getAllItems())
+# mongodbCollectionHandler.addManyItems([
+#     {"title":"lmaoo"},
+#     {"title":"ok lol"}
+# ])
+
+
+print(mongodbCollectionHandler.findOne({"title":"hello world"}))
