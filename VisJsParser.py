@@ -18,7 +18,7 @@ def noun_dict_to_visjs_nodes(noun_dict: dict[str, int]):
     for i, word in enumerate(noun_list):
         number_of_occurrences = noun_dict[word]
         font_size = number_of_occurrences*font_size_multiplier
-        output += f"{{id: {i}, label: \"{word}\", font:{{size: {font_size} }} }},"
+        output += f"{{\"id\": {i}, \"label\": \"{word}\", \"font\":{{\"size\": {font_size} }} }},"
 
     output = output[:-1] + "]"
 
@@ -36,7 +36,7 @@ def adjacency_matrix_to_visjs_edges(adjacency_matrix: np.array):
 
             # If a cell is 1 and is not on the diagonal (avoid self loops)
             if (adjacency_matrix[i][k] == 1) and (i is not k):
-                line = f"{{from: {i}, to: {k}, id: \"{i},{k},{id_counter}\"}},"
+                line = f"{{\"from\": {i}, \"to\": {k}, \"id\": \"{i},{k},{id_counter}\"}},"
                 output += line
 
                 id_counter += 1
@@ -49,8 +49,8 @@ def adjacency_matrix_to_visjs_edges(adjacency_matrix: np.array):
 def get_visjs_graph_object(noun_dict: dict[str, int], adjacency_matrix: np.array):
     output: str = "{\n"
 
-    output += "nodes: " + noun_dict_to_visjs_nodes(noun_dict=noun_dict) + ",\n"
-    output += "edges: " + adjacency_matrix_to_visjs_edges(adjacency_matrix=adjacency_matrix) + "\n}"
+    output += "\"nodes\": " + noun_dict_to_visjs_nodes(noun_dict=noun_dict) + ",\n"
+    output += "\"edges\": " + adjacency_matrix_to_visjs_edges(adjacency_matrix=adjacency_matrix) + "\n}"
 
     # print(sum(noun_dict.values()))
     return output
