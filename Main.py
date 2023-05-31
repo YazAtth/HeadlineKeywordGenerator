@@ -9,7 +9,7 @@ from ArticleContainer import ArticleContainer
 
 
 articleContainer = ArticleContainer()
-articleContainer.getArticlesFromRssFeeds()
+articleContainer._getArticlesFromRssFeeds()
 
 headlines: List[str] = articleContainer.getHeadlines()
 top_nouns: dict[str, int] = NounFrequency.top_nouns(articleContainer.getHeadlines(), 100)
@@ -26,6 +26,8 @@ adjacency_matrix: np.array = MatrixGenerator.get_adjacency_matrix(noun_dict=top_
 # print(VisJsParser.adjacency_matrix_to_visjs_edges(adjacency_matrix=adjacency_matrix))
 
 print(VisJsParser.get_visjs_graph_object(noun_dict=top_nouns, adjacency_matrix=adjacency_matrix))
+
+print(articleContainer.getArticles())
 
 
 
