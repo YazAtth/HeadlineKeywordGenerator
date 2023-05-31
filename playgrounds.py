@@ -11,4 +11,11 @@ mongodbCollectionHandler = MongoDbCollectionHandler("mongodb+srv://user:netninja
 # ])
 
 
-print(mongodbCollectionHandler.findOne({"title":"hello world"}))
+
+# print(mongodbCollectionHandler.findOne({"title":"hello world"}))
+
+
+mongodbCollectionHandler.replaceAllItems([
+    {"title":"lmaoo"},
+    {"title":"ok lol"}
+])

@@ -7,10 +7,17 @@ import MatrixGenerator
 import NounFrequency
 import VisJsParser
 from ArticleContainer import ArticleContainer
+from MongoDbCollectionHandler import MongoDbCollectionHandler
 
 
 articleContainer = ArticleContainer()
 articleContainer._getArticlesFromRssFeeds()
+
+# articleDbCollection = MongoDbCollectionHandler("mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority",
+#                                 "StateOfNewsApp", "articles")
+# articleDbCollection.addManyItems(articleContainer.getArticles())
+
+
 
 headlines: List[str] = articleContainer.getHeadlines()
 top_nouns: dict[str, int] = NounFrequency.top_nouns(articleContainer.getHeadlines(), 100)

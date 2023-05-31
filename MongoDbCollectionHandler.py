@@ -50,3 +50,8 @@ class MongoDbCollectionHandler:
 
     def addManyItems(self, itemList):
         self.collection.insert_many(itemList)
+
+
+    def replaceAllItems(self, itemList):
+        self.collection.delete_many({})
+        self.addManyItems(itemList)
