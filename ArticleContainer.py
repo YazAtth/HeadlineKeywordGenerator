@@ -1,10 +1,12 @@
+from typing import List
+
 import requests
 import xmltodict
 import json
 
-class HeadlineRetriever:
+class ArticleContainer:
     def __init__(self):
-        self.headlineList = []
+        self.articleList = []
         self.rssUrlList = ["https://www.theguardian.com/international/rss",
                            "http://feeds.bbci.co.uk/news/rss.xml",
                            "http://feeds.bbci.co.uk/news/world/rss.xml",
@@ -21,14 +23,28 @@ class HeadlineRetriever:
 
         return json_res
 
-    def setHeadlineList(self) -> None:
+    def getArticlesFromRssFeeds(self) -> None:
 
         for url in self.rssUrlList:
             json_res = self.make_api_request(url)
-            article_list = json_res["rss"]["channel"]["item"]
+            article_list_from_rss_feed = json_res["rss"]["channel"]["item"]
 
-            for article in article_list:
-                self.headlineList.append(article["title"])
+            for article_from_rss_feed in article_list_from_rss_feed:
+                article_object = {
+                    "title": article_from_rss_feed["title"]
+                }
+
+                self.articleList.append(article_object)
+
+
+    def getHeadlines(self) -> List[str]:
+
+        headline_list = []
+
+        for article in self.articleList:
+            headline_list.append(article["title"])
+
+        return headline_list
 
 
 

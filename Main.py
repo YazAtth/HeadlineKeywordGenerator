@@ -5,14 +5,14 @@ import numpy as np
 import MatrixGenerator
 import NounFrequency
 import VisJsParser
-from HeadlineRetriever import HeadlineRetriever
+from ArticleContainer import ArticleContainer
 
 
-headlineRetriever = HeadlineRetriever()
-headlineRetriever.setHeadlineList()
+articleContainer = ArticleContainer()
+articleContainer.getArticlesFromRssFeeds()
 
-headlines: List[str] = headlineRetriever.headlineList
-top_nouns: dict[str, int] = NounFrequency.top_nouns(headlineRetriever.headlineList, 100)
+headlines: List[str] = articleContainer.getHeadlines()
+top_nouns: dict[str, int] = NounFrequency.top_nouns(articleContainer.getHeadlines(), 100)
 
 
 showing_together_matrix: np.array = MatrixGenerator.get_showing_together_matrix(noun_dict=top_nouns, headline_list=headlines)
@@ -20,7 +20,6 @@ adjacency_matrix: np.array = MatrixGenerator.get_adjacency_matrix(noun_dict=top_
 
 
 
-print(NounFrequency.top_nouns(headlineRetriever.headlineList, 5))
 
 # print(VisJsParser.noun_dict_to_visjs_nodes(noun_dict=top_nouns))
 # print(MatrixGenerator.get_adjacency_matrix(noun_dict=top_nouns, headline_list=headlines))
