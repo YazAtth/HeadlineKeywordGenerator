@@ -39,7 +39,7 @@ class ArticleContainer:
 
         return json_res
 
-    def _getArticlesFromRssFeeds(self) -> None:
+    def getArticlesFromRssFeeds(self) -> None:
 
         for url in self.rssUrlList:
             json_res = self._make_api_request(url)
