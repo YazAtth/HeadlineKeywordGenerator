@@ -53,7 +53,7 @@ for node in nodeList:
         headline = article["title"]
         headline_lowercase = headline.lower()
 
-        if nodeLabel in headline_lowercase:
+        if nodeLabel in headline_lowercase.split():
             nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
 
     nodeAndHeadlineForeignKeyPairingList.append(nodeAndHeadlineForeignKeysObject)
