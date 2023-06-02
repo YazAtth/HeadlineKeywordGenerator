@@ -32,12 +32,10 @@ def top_nouns(strings, N):
     # nouns = [p.singular_noun(noun) or noun for noun in nouns]
     updated_nouns = []
     for noun in nouns:
-        # print(noun)
         non_plural_noun = p.singular_noun(noun)
         if not non_plural_noun:  # If we can't un-plural-ise the noun: do nothing
             updated_nouns.append(noun)
         else:  # If we can: do it and add it to the map, so we can find the plural version later
-            # print("\tWe can singularise it")
             updated_nouns.append(non_plural_noun)
             non_plural_to_original_map[non_plural_noun] = noun
     nouns = updated_nouns
@@ -58,7 +56,5 @@ def top_nouns(strings, N):
         new_noun_and_frequency_tuple = (new_noun_key, frequency_value)
         noun_frequency_tuple_list.append(new_noun_and_frequency_tuple)
 
-
-    # print(noun_counts.most_common(N))
     # Return the top N nouns and their frequencies
     return dict(noun_frequency_tuple_list)

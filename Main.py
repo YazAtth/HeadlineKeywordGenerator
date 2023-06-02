@@ -36,7 +36,6 @@ showing_together_matrix: np.array = MatrixGenerator.get_showing_together_matrix(
 adjacency_matrix: np.array = MatrixGenerator.get_adjacency_matrix(noun_dict=top_nouns, headline_list=headlines)
 nodeEdgeJsonString = VisJsParser.get_visjs_graph_object(noun_dict=top_nouns, adjacency_matrix=adjacency_matrix)
 
-# print(type(json.loads(nodeEdgeJsonString)))
 
 graphDbCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="graph")
 graphDbCollection.replaceAllItems([json.loads(nodeEdgeJsonString)])
@@ -49,7 +48,6 @@ nodeList = json.loads(nodeEdgeJsonString)["nodes"]
 nodeAndHeadlineForeignKeyPairingList = []
 
 for node in nodeList:
-
 
     nodeAndHeadlineForeignKeysObject = {}
 
@@ -66,20 +64,9 @@ for node in nodeList:
         # Remove punctuation in the headline
         headline_word_list = [headline_word for headline_word in headline_lowercase.split() if headline_word.isalnum()]
 
-        # if nodeLabel == "us":
-        #     print(f"Looking at nodeLabel:' and headline: '{headline_word_list}'")
 
         if nodeLabel in headline_word_list:
             nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
-
-
-        # for headline_word00 in headline_word_list:
-
-
-
-            # if nodeLabel in headline_word:
-            #     nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
-            #     break
 
 
 
@@ -96,4 +83,3 @@ nodeAndHeadlineJunctionsDbCollection = MongoDbCollectionHandler(uri=URI, databas
 nodeAndHeadlineJunctionsDbCollection.replaceAllItems(nodeAndHeadlineForeignKeyPairingList)
 
 
-# print(articleContainer.getArticles())
