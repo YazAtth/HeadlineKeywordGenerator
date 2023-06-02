@@ -1,3 +1,4 @@
+import re
 from typing import List
 
 import requests
@@ -49,9 +50,9 @@ class ArticleContainer:
 
                 article_object = {
                     "article_id": self._generateId(),
-                    "title": article_from_rss_feed["title"],
+                    "title": self._remove_html_tags(article_from_rss_feed["title"]),
                     "link": article_from_rss_feed["link"],
-                    "description": article_from_rss_feed["description"],
+                    "description": self._remove_html_tags(article_from_rss_feed["description"]),
                 }
 
                 self.articleList.append(article_object)
@@ -62,7 +63,14 @@ class ArticleContainer:
         self.idGeneration += 1
         return article_id
 
+    def _remove_html_tags(self, string):
+        # Define the regular expression pattern to match HTML tags
+        pattern = re.compile(r'<.*?>')
 
+        # Remove HTML tags from the string using the pattern
+        result = re.sub(pattern, '', string)
+
+        return result
 
 
 
