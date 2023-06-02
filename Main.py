@@ -10,12 +10,6 @@ from ArticleContainer import ArticleContainer
 from MongoDbCollectionHandler import MongoDbCollectionHandler
 
 
-# TODO: Figure out why juntion table has keys without values in some entries
-# TODO: Introduce atomicity to database operations
-# TODO: Figure out why "ME" node is so big
-
-
-
 URI = "mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority"
 
 # Grab articles from RSS feeds and place into the database
