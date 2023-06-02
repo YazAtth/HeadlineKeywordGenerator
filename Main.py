@@ -23,7 +23,12 @@ articleDbCollection.replaceAllItems(itemList=articleContainer.getArticles())
 
 # Make a graph from the most frequently used keywords from the headlines and put into the database
 headlines: List[str] = articleContainer.getHeadlines()
-top_nouns: dict[str, int] = NounFrequency.top_nouns(articleContainer.getHeadlines(), 100)
+top_nouns_and_plural_hash = NounFrequency.get_top_nouns_and_plural_hash(articleContainer.getHeadlines(), 100)
+top_nouns: dict[str, int] = top_nouns_and_plural_hash[0]
+
+# We get the plural to non_plural map by reversing the existing map
+non_plural_to_original_map: dict[str, str] = top_nouns_and_plural_hash[1]
+original_to_non_plural_map: dict[str, str] = {value: key for key, value in non_plural_to_original_map.items()}
 
 showing_together_matrix: np.array = MatrixGenerator.get_showing_together_matrix(noun_dict=top_nouns,
                                                                                 headline_list=headlines)
@@ -61,6 +66,10 @@ for node in nodeList:
 
         if nodeLabel in headline_word_list:
             nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
+        elif nodeLabel in original_to_non_plural_map:  # Checks the non-plural version of the word to see if it exists there
+            if original_to_non_plural_map.get(nodeLabel) in headline_word_list:
+                nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
+
 
 
 
@@ -73,5 +82,4 @@ for node in nodeList:
 nodeAndHeadlineJunctionsDbCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp",
                                                                 collectionName="nodeAndHeadlineJunctions")
 nodeAndHeadlineJunctionsDbCollection.replaceAllItems(nodeAndHeadlineForeignKeyPairingList)
-
 

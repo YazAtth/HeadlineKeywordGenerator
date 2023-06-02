@@ -7,7 +7,7 @@ import inflect
 
 custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "New"]
 
-def top_nouns(strings, N):
+def get_top_nouns_and_plural_hash(strings, N):
     # Tokenize the strings into words
     words = [nltk.word_tokenize(string) for string in strings]
 
@@ -56,5 +56,6 @@ def top_nouns(strings, N):
         new_noun_and_frequency_tuple = (new_noun_key, frequency_value)
         noun_frequency_tuple_list.append(new_noun_and_frequency_tuple)
 
-    # Return the top N nouns and their frequencies
-    return dict(noun_frequency_tuple_list)
+    # Return the top N nouns and their frequencies AND the non_plural to original map
+    # Output arguments not ideal but saves us from doing expensive calculation twice
+    return [dict(noun_frequency_tuple_list), non_plural_to_original_map]
