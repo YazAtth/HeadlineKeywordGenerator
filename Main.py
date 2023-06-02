@@ -9,6 +9,13 @@ import VisJsParser
 from ArticleContainer import ArticleContainer
 from MongoDbCollectionHandler import MongoDbCollectionHandler
 
+
+# TODO: Figure out why juntion table has keys without values in some entries
+# TODO: Introduce atomicity to database operations
+# TODO: Figure out why "ME" node is so big
+
+
+
 URI = "mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority"
 
 # Grab articles from RSS feeds and place into the database
@@ -43,22 +50,46 @@ nodeAndHeadlineForeignKeyPairingList = []
 
 for node in nodeList:
 
+
     nodeAndHeadlineForeignKeysObject = {}
 
     nodeLabel = node["label"].lower()
     nodeAndHeadlineForeignKeysObject["nodeLabel"] = nodeLabel
     nodeAndHeadlineForeignKeysObject["relatedArticleIds"] = []
 
-    for article in articleContainer.getArticles():
-        headline = article["title"]
-        headline_lowercase = headline.lower()
 
-        if nodeLabel in headline_lowercase.split():
+    for article in articleContainer.getArticles():
+        headline = article["title"].lower()
+        headline_lowercase = headline.lower()
+        headline_lowercase = headline_lowercase.replace("’", " ")  # Replaces all apostrophes with a space
+
+        # Remove punctuation in the headline
+        headline_word_list = [headline_word for headline_word in headline_lowercase.split() if headline_word.isalnum()]
+
+        # if nodeLabel == "us":
+        #     print(f"Looking at nodeLabel:' and headline: '{headline_word_list}'")
+
+        if nodeLabel in headline_word_list:
             nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
 
-    nodeAndHeadlineForeignKeyPairingList.append(nodeAndHeadlineForeignKeysObject)
 
-# print(nodeAndHeadlineForeignKeyPairingList)
+        # for headline_word00 in headline_word_list:
+
+
+
+            # if nodeLabel in headline_word:
+            #     nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
+            #     break
+
+
+
+    # Ensure no nodes with an empty relatedArticleId is added.
+    if len(nodeAndHeadlineForeignKeysObject["relatedArticleIds"]) > 0:
+        nodeAndHeadlineForeignKeyPairingList.append(nodeAndHeadlineForeignKeysObject)
+    else:
+        print(f"The node: {nodeLabel} has an empty relatedArticleId list")
+
+print(nodeAndHeadlineForeignKeyPairingList)
 
 nodeAndHeadlineJunctionsDbCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp",
                                                                 collectionName="nodeAndHeadlineJunctions")
