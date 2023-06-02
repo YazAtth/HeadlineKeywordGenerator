@@ -59,6 +59,8 @@ for node in nodeList:
         headline = article["title"].lower()
         headline_lowercase = headline.lower()
         headline_lowercase = headline_lowercase.replace("’", " ")  # Replaces all apostrophes with a space
+        headline_lowercase = headline_lowercase.replace(":", " ")  # Replaces all colons with a space
+
 
         # Remove punctuation in the headline
         headline_word_list = [headline_word for headline_word in headline_lowercase.split() if headline_word.isalnum()]
