@@ -4,6 +4,8 @@ import numpy as np
 import numpy.typing
 
 
+# Returns matrix where the value at position [i][k] represents the number of times the word at index "i"
+# and the word at index "k" from "noun_list" appear together in the headlines.
 def get_showing_together_matrix(noun_dict: dict, headline_list: List[str]) -> np.array:
     noun_list = list(noun_dict.keys())
 
@@ -19,7 +21,7 @@ def get_showing_together_matrix(noun_dict: dict, headline_list: List[str]) -> np
 
     return showing_together_matrix
 
-
+# Does the same thing as the get_showing_together matrix but makes it binary
 def get_adjacency_matrix(noun_dict: dict, headline_list: List[str]) -> np.array:
     showing_together_matrix: np.array = get_showing_together_matrix(noun_dict, headline_list)
 
