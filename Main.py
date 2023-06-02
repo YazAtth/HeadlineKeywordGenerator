@@ -70,8 +70,6 @@ for node in nodeList:
     else:
         print(f"The node: {nodeLabel} has an empty relatedArticleId list")
 
-print(nodeAndHeadlineForeignKeyPairingList)
-
 nodeAndHeadlineJunctionsDbCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp",
                                                                 collectionName="nodeAndHeadlineJunctions")
 nodeAndHeadlineJunctionsDbCollection.replaceAllItems(nodeAndHeadlineForeignKeyPairingList)
