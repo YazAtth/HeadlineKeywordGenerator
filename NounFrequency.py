@@ -5,7 +5,8 @@ import inflect
 
 
 
-custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "New"]
+custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "New", "Co", "My", "Out",
+                         "images", "says", "rise"]
 
 def get_top_nouns_and_plural_hash(strings, N):
     # Tokenize the strings into words
