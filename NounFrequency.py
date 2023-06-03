@@ -6,7 +6,7 @@ import inflect
 
 # Must be lowercase
 custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "new", "co", "my", "out",
-                         "images", "says", "rise", "call"]
+                         "images", "says", "rise", "call", "man", "men"]
 
 def get_top_nouns_and_plural_hash(strings, N):
     # Tokenize the strings into words
@@ -56,6 +56,56 @@ def get_top_nouns_and_plural_hash(strings, N):
         new_noun_key = non_plural_to_original_map.get(noun_key) or noun_key
         new_noun_and_frequency_tuple = (new_noun_key, frequency_value)
         noun_frequency_tuple_list.append(new_noun_and_frequency_tuple)
+
+
+    # Prevents same word appearing in multiple nodes in different cases.
+    # Combines versions of words with different cases where words with more capital letters are prioritised
+    # e.g. "UK" has priority over "Uk" so "Uk" is absorbed by "UK" to become a single node "Uk"
+    noun_frequency_tuple_list_with_no_duplicates = []
+    noun_to_tuple_map = {}  # Maps noun to noun-frequency tuple
+    nouns_lowercase_list = []
+    nouns_lowercase_to_saved_case_map = {}  # Maps the lowercase form of the noun to the noun in whatever case it was saved in the noun_frequency_tuple_list_with_no_duplicates
+
+
+    for noun_frequency_tuple in noun_frequency_tuple_list:
+        noun = noun_frequency_tuple[0]
+        frequency_value = noun_frequency_tuple[1]
+
+        if noun.lower() not in nouns_lowercase_list:
+            noun_frequency_tuple_list_with_no_duplicates.append(noun_frequency_tuple)  # Adds tuple to final list
+            nouns_lowercase_list.append(noun.lower())  # Adds to comparison list
+            nouns_lowercase_to_saved_case_map[noun.lower()] = noun  # Allows us to find the saved noun from the lowercase noun
+            noun_to_tuple_map[noun.lower()] = noun_frequency_tuple  # Allows us to find the tuple from the lowercase noun later
+        else:
+            conflicting_noun_num_of_capital_letters = sum(1 for c in noun if c.isupper())
+            saved_noun = nouns_lowercase_to_saved_case_map[noun.lower()]
+            saved_noun_num_of_capital_letters = sum(1 for c in saved_noun if c.isupper())
+            new_noun_has_more_capital_letters = conflicting_noun_num_of_capital_letters > saved_noun_num_of_capital_letters
+
+            # Sum the frequency of the conflicting noun and the saved noun
+            saved_tuple = noun_to_tuple_map[noun.lower()]
+            saved_frequency = saved_tuple[1]
+            new_frequency = frequency_value + saved_frequency
+
+            # The frequency value of the saved tuple needs to be changed, so we delete it
+            noun_frequency_tuple_list_with_no_duplicates.remove(saved_tuple)
+
+            if new_noun_has_more_capital_letters:
+                # Removed the saved noun-frequency tuple and add the new tuple
+                new_noun_and_frequency_tuple = (noun, new_frequency)
+                noun_frequency_tuple_list_with_no_duplicates.append(new_noun_and_frequency_tuple)
+
+                nouns_lowercase_to_saved_case_map[noun.lower()] = noun
+                noun_to_tuple_map[noun.lower()] = new_noun_and_frequency_tuple
+            else:
+                new_noun_and_frequency_tuple = (saved_noun, new_frequency)
+                noun_frequency_tuple_list_with_no_duplicates.append(new_noun_and_frequency_tuple)
+
+                noun_to_tuple_map[noun.lower()] = new_noun_and_frequency_tuple
+
+    noun_frequency_tuple_list = noun_frequency_tuple_list_with_no_duplicates  # Update the list
+
+
 
     # Return the top N nouns and their frequencies AND the non_plural to original map
     # Output arguments not ideal but saves us from doing expensive calculation twice
