@@ -6,7 +6,7 @@ import inflect
 
 # Must be lowercase
 custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "new", "co", "my", "out",
-                         "images", "says", "rise"]
+                         "images", "says", "rise", "call"]
 
 def get_top_nouns_and_plural_hash(strings, N):
     # Tokenize the strings into words
