@@ -41,6 +41,7 @@ class ArticleContainer:
         return json_res
 
     def getArticlesFromRssFeeds(self) -> None:
+        obtainedArticleLinks = []  # Keep track of added articles prevent the same article from being added twice
 
         for url in self.rssUrlList:
             json_res = self._make_api_request(url)
@@ -55,8 +56,10 @@ class ArticleContainer:
                     "description": self._remove_html_tags(article_from_rss_feed["description"]),
                 }
 
-                self.articleList.append(article_object)
-
+                # Guard to prevent duplicate articles
+                if article_object["link"] not in obtainedArticleLinks:
+                    self.articleList.append(article_object)
+                    obtainedArticleLinks.append(article_object["link"])
 
     def _generateId(self) -> int:
         article_id = self.idGeneration
