@@ -12,16 +12,15 @@ from MongoDbCollectionHandler import MongoDbCollectionHandler
 
 URI = "mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority"
 
-# Grab articles from RSS feeds and place into the database
+# Grab articles from RSS feeds
 articleContainer = ArticleContainer()
 articleContainer.getArticlesFromRssFeeds()
 articleDbCollection = MongoDbCollectionHandler(
     uri=URI,
     databaseName="StateOfNewsApp", collectionName="articles")
-articleDbCollection.replaceAllItems(itemList=articleContainer.getArticles())
 
 
-# Make a graph from the most frequently used keywords from the headlines and put into the database
+# Make a graph from the most frequently used keywords from the headlines
 headlines: List[str] = articleContainer.getHeadlines()
 top_nouns_and_plural_hash = NounFrequency.get_top_nouns_and_plural_hash(articleContainer.getHeadlines(), 100)
 top_nouns: dict[str, int] = top_nouns_and_plural_hash[0]
@@ -37,7 +36,6 @@ nodeEdgeJsonString = VisJsParser.get_visjs_graph_object(noun_dict=top_nouns, adj
 
 
 graphDbCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="graph")
-graphDbCollection.replaceAllItems([json.loads(nodeEdgeJsonString)])
 
 
 
@@ -83,5 +81,11 @@ for node in nodeList:
 
 nodeAndHeadlineJunctionsDbCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp",
                                                                 collectionName="nodeAndHeadlineJunctions")
+
+
+# Pushing to database must happen at the end to preserve atomicity
+articleDbCollection.replaceAllItems(itemList=articleContainer.getArticles())
+graphDbCollection.replaceAllItems([json.loads(nodeEdgeJsonString)])
 nodeAndHeadlineJunctionsDbCollection.replaceAllItems(nodeAndHeadlineForeignKeyPairingList)
+
 
