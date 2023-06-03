@@ -4,8 +4,8 @@ import numpy as np
 import inflect
 
 
-
-custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "New", "Co", "My", "Out",
+# Must be lowercase
+custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "new", "co", "my", "out",
                          "images", "says", "rise"]
 
 def get_top_nouns_and_plural_hash(strings, N):
@@ -25,7 +25,7 @@ def get_top_nouns_and_plural_hash(strings, N):
     nouns = [noun for noun in nouns if len(noun) > 1]
 
     # Remove custom words that appear frequently in news headlines
-    nouns = [noun for noun in nouns if noun not in custom_stop_word_list]
+    nouns = [noun for noun in nouns if noun.lower() not in custom_stop_word_list]
 
     # Convert plurals into singular words to prevent a plural and singular version of a word from being treated differently
     non_plural_to_original_map = {}  # So we can find the plural word from the non-plural later
