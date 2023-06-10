@@ -54,6 +54,10 @@ class ArticleContainer:
 
             for article_from_rss_feed in article_list_from_rss_feed:
 
+                # If headline is empty
+                if not article_from_rss_feed["title"]:
+                    continue
+
 
                 article_object = {
                     "article_id": self._generateId(),
@@ -74,11 +78,17 @@ class ArticleContainer:
         return article_id
 
     def _remove_html_tags(self, string):
+
+        # If string is empty
+        if not string:
+            return string
+
+
         # Define the regular expression pattern to match HTML tags
         pattern = re.compile(r'<.*?>')
 
         # Remove HTML tags from the string using the pattern
-        result = re.sub(pattern, '', string)
+        result = re.sub(pattern, '', str(string))
 
         return result
 
