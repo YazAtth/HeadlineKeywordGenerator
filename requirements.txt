@@ -1,0 +1,6 @@
+inflect==6.0.2
+nltk==3.8.1
+numpy==1.24.1
+pymongo==4.3.3
+Requests==2.31.0
+xmltodict==0.13.0
