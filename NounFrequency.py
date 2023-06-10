@@ -1,6 +1,5 @@
 import nltk
 from collections import Counter
-import numpy as np
 import inflect
 
 

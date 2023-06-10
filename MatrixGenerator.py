@@ -1,7 +1,5 @@
 from typing import List
-
 import numpy as np
-import numpy.typing
 
 
 # Returns matrix where the value at position [i][k] represents the number of times the word at index "i"
