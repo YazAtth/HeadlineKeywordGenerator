@@ -1,3 +1,5 @@
+import os
+
 import nltk
 from collections import Counter
 import inflect
@@ -7,10 +9,7 @@ nltk.data.path.append("/tmp")
 nltk.download("punkt", download_dir="/tmp")
 nltk.download('averaged_perceptron_tagger', download_dir="/tmp")
 
-URI = "mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority"
-utilityCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="utils")
-
-
+utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp", collectionName="utils")
 custom_stop_word_list = utilityCollection.findOne({"utilType": "stopWordList"}).get("stopWordList")
 
 def get_top_nouns_and_plural_hash(strings, N):

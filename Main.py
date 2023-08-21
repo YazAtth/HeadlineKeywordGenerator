@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 import json
 from typing import List
@@ -12,13 +13,12 @@ from MongoDbCollectionHandler import MongoDbCollectionHandler
 
 def run():
 
-    URI = "mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority"
 
     # Grab articles from RSS feeds
     articleContainer = ArticleContainer()
     articleContainer.getArticlesFromRssFeeds()
     articleDbCollection = MongoDbCollectionHandler(
-        uri=URI,
+        uri=os.environ["URI"],
         databaseName="StateOfNewsApp", collectionName="articles")
 
 
@@ -37,7 +37,7 @@ def run():
     nodeEdgeJsonString = VisJsParser.get_visjs_graph_object(noun_dict=top_nouns, adjacency_matrix=adjacency_matrix)
 
 
-    graphDbCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="graph")
+    graphDbCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp", collectionName="graph")
 
 
 
@@ -81,7 +81,7 @@ def run():
         else:
             print(f"The node: {nodeLabel} has an empty relatedArticleId list")
 
-    nodeAndHeadlineJunctionsDbCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp",
+    nodeAndHeadlineJunctionsDbCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp",
                                                                     collectionName="nodeAndHeadlineJunctions")
 
 
@@ -91,7 +91,7 @@ def run():
     nodeAndHeadlineJunctionsDbCollection.replaceAllItems(nodeAndHeadlineForeignKeyPairingList)
 
     # Util collection for debugging
-    utilityCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="utils")
+    utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp", collectionName="utils")
     lastUpdatedUtil = {
         "utilType": "lastUpdated",
         "lastUpdated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")

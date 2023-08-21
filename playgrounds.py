@@ -1,9 +1,9 @@
+import os
 from datetime import datetime
 
 from MongoDbCollectionHandler import MongoDbCollectionHandler
 
-URI = "mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority"
-utilityCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="utils")
+utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp", collectionName="utils")
 
 utilItem = {
     "utilType": "lastUpdated",
