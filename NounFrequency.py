@@ -2,6 +2,9 @@ import nltk
 from collections import Counter
 import inflect
 
+nltk.data.path.append("/tmp")
+nltk.download("punkt", download_dir="/tmp")
+nltk.download('averaged_perceptron_tagger', download_dir="/tmp")
 
 # Must be lowercase
 custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "new", "co", "my", "out",
