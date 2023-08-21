@@ -1,21 +1,22 @@
+import os
+
 import regex as re
 from typing import List
 import requests
 import xmltodict
 import json
 
+from MongoDbCollectionHandler import MongoDbCollectionHandler
+
+
 class ArticleContainer:
     def __init__(self):
         self.articleList = []
-        self.rssUrlList = ["https://www.theguardian.com/international/rss",
-                           "http://feeds.bbci.co.uk/news/rss.xml",
-                           "http://feeds.bbci.co.uk/news/world/rss.xml",
-                           "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-                           "http://rss.cnn.com/rss/cnn_topstories.rss",
-                           "https://www.huffpost.com/section/front-page/feed?x=1",
-                           "https://cdn.feedcontrol.net/8/1114-wioSIX3uu8MEj.xml",
-                           "https://www.rte.ie/feeds/rss/?index=/news/&limit=100",
-                           "https://www.irishtimes.com/arc/outboundfeeds/feed-irish-news/?from=0&size=100"]
+
+        utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp",
+                                                     collectionName="utils")
+
+        self.rssUrlList = utilityCollection.findOne({"utilType": "rssFeedList"}).get("rssFeedList")
         self.idGeneration: int = 0
 
 
