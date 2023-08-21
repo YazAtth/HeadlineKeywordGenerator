@@ -1,14 +1,17 @@
 import nltk
 from collections import Counter
 import inflect
+from MongoDbCollectionHandler import MongoDbCollectionHandler
 
 nltk.data.path.append("/tmp")
 nltk.download("punkt", download_dir="/tmp")
 nltk.download('averaged_perceptron_tagger', download_dir="/tmp")
 
-# Must be lowercase
-custom_stop_word_list = ["video", "way", "pictures", "year", "month", "week", "podcast", "new", "new", "co", "my", "out",
-                         "images", "says", "rise", "call", "man", "men"]
+URI = "mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority"
+utilityCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="utils")
+
+
+custom_stop_word_list = utilityCollection.findOne({"utilType": "stopWordList"}).get("stopWordList")
 
 def get_top_nouns_and_plural_hash(strings, N):
     # Tokenize the strings into words

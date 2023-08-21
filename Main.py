@@ -92,10 +92,11 @@ def run():
 
     # Util collection for debugging
     utilityCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="utils")
-    utilItem = {
+    lastUpdatedUtil = {
+        "utilType": "lastUpdated",
         "lastUpdated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
-    utilityCollection.replaceAllItems([utilItem])
+    utilityCollection.replaceItemBy(lastUpdatedUtil, {"utilType": "lastUpdated"})
 
 run()
 

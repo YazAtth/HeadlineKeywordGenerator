@@ -1,23 +1,13 @@
+from datetime import datetime
+
 from MongoDbCollectionHandler import MongoDbCollectionHandler
 
-mongodbCollectionHandler = MongoDbCollectionHandler(uri="mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority",
-                                databaseName="practicingDb", collectionName="dbpracticecollections2", getObjectIds=False)
+URI = "mongodb+srv://user:netninja@nodetutorial.d7env.mongodb.net/practicingDb?retryWrites=true&w=majority"
+utilityCollection = MongoDbCollectionHandler(uri=URI, databaseName="StateOfNewsApp", collectionName="utils")
 
-
-# print(mongodbCollectionHandler.getAllItems())
-# mongodbCollectionHandler.addManyItems([
-#     {"title":"lmaoo"},
-#     {"title":"ok lol"}
-# ])
-
-
-
-# print(mongodbCollectionHandler.findOne({"title":"hello world"}))
-
-
-# mongodbCollectionHandler.replaceAllItems([
-#     {"title":"lmaoo"},
-#     {"title":"ok lol"}
-# ])
-
-print(mongodbCollectionHandler.findOne({"title": "lmaoo"}))
+utilItem = {
+    "utilType": "lastUpdated",
+    "lastUpdated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+}
+# utilityCollection.replaceAllItems([utilItem])
+utilityCollection.replaceItemBy(utilItem, {"utilType": "lastUpdated"})

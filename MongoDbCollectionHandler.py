@@ -69,3 +69,7 @@ class MongoDbCollectionHandler:
     def replaceAllItems(self, itemList):
         self.collection.delete_many({})
         self.addManyItems(itemList)
+
+    def replaceItemBy(self, item, delete_filter):
+        self.collection.delete_one(delete_filter)
+        self.addOneItem(item)
