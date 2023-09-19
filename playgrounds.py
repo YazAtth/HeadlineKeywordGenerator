@@ -1,11 +1,7 @@
-import os
-from datetime import datetime
+from S3Client import S3Client
 
-from MongoDbCollectionHandler import MongoDbCollectionHandler
+s3_client = S3Client()
 
-utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp", collectionName="utils")
+print(s3_client.read_file_from_s3(bucket_name="sample-cli-test-bucket", file_name="rss_feeds.txt"))
 
 
-rssUrlList = utilityCollection.findOne({"utilType": "rssFeedList"}).get("rssFeedList")
-
-print(rssUrlList)
