@@ -4,13 +4,16 @@ import nltk
 from collections import Counter
 import inflect
 from MongoDbCollectionHandler import MongoDbCollectionHandler
+from S3Client import S3Client
 
 nltk.data.path.append("/tmp")
 nltk.download("punkt", download_dir="/tmp")
 nltk.download('averaged_perceptron_tagger', download_dir="/tmp")
 
-utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp", collectionName="utils")
-custom_stop_word_list = utilityCollection.findOne({"utilType": "stopWordList"}).get("stopWordList")
+s3_client = S3Client()
+
+
+custom_stop_word_list = s3_client.read_file_from_s3(bucket_name=os.environ["AWS_S3_BUCKET"], file_name="stop_words.txt", is_list=True)
 
 def get_top_nouns_and_plural_hash(strings, N):
     # Tokenize the strings into words

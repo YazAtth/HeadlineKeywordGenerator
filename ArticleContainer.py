@@ -7,16 +7,19 @@ import xmltodict
 import json
 
 from MongoDbCollectionHandler import MongoDbCollectionHandler
+from S3Client import S3Client
 
+s3_client = S3Client()
 
 class ArticleContainer:
     def __init__(self):
         self.articleList = []
 
-        utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp",
-                                                     collectionName="utils")
+        # utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp",
+        #                                              collectionName="utils")
 
-        self.rssUrlList = utilityCollection.findOne({"utilType": "rssFeedList"}).get("rssFeedList")
+
+        self.rssUrlList = s3_client.read_file_from_s3(bucket_name=os.environ["AWS_S3_BUCKET"], file_name="rss_feeds.txt", is_list=True)
         self.idGeneration: int = 0
 
 

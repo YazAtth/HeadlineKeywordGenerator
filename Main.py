@@ -9,7 +9,9 @@ import NounFrequency
 import VisJsParser
 from ArticleContainer import ArticleContainer
 from MongoDbCollectionHandler import MongoDbCollectionHandler
+from S3Client import S3Client
 
+s3_client = S3Client()
 
 def run():
 
@@ -17,6 +19,8 @@ def run():
     # Grab articles from RSS feeds
     articleContainer = ArticleContainer()
     articleContainer.getArticlesFromRssFeeds()
+
+
     articleDbCollection = MongoDbCollectionHandler(
         uri=os.environ["URI"],
         databaseName="StateOfNewsApp", collectionName="articles")
