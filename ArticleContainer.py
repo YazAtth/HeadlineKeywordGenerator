@@ -12,24 +12,20 @@ s3_client = S3Client()
 
 class ArticleContainer:
     def __init__(self):
-        self.articleList = []
-
-        # utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp",
-        #                                              collectionName="utils")
-
+        self.savedArticles = {}
 
         self.rssUrlList = s3_client.read_file_from_s3(bucket_name=os.environ["AWS_S3_BUCKET"], file_name="rss_feeds.txt", is_list=True)
         self.idGeneration: int = 0
 
 
     def getArticles(self):
-        return self.articleList
+        return self.savedArticles
 
     def getHeadlines(self) -> List[str]:
 
         headline_list = []
 
-        for article in self.articleList:
+        for article in self.savedArticles.values():
             headline_list.append(article["title"])
 
         return headline_list
@@ -60,9 +56,8 @@ class ArticleContainer:
                 if not article_from_rss_feed["title"]:
                     continue
 
-
+                article_id = self._generateId()
                 article_object = {
-                    "article_id": self._generateId(),
                     "title": self._remove_html_tags(article_from_rss_feed["title"]),
                     "link": article_from_rss_feed["link"],
                     "description": self._remove_html_tags(str(article_from_rss_feed.get("description", ""))),
@@ -70,7 +65,8 @@ class ArticleContainer:
 
                 # Guard to prevent duplicate articles
                 if article_object["link"] not in obtainedArticleLinks:
-                    self.articleList.append(article_object)
+                    # self.articleList.append(article_object)
+                    self.savedArticles[article_id] = article_object
                     obtainedArticleLinks.append(article_object["link"])
 
 

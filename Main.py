@@ -40,7 +40,7 @@ def run():
     for node in nodeList:
         nodeLabel = node["label"].lower()
 
-        for article in articleContainer.getArticles():
+        for article_id, article in articleContainer.getArticles().items():
             headline = article["title"].lower()
             headline_lowercase = headline.lower()
             headline_lowercase = headline_lowercase.replace("’", " ")  # Replaces all apostrophes with a space
@@ -51,10 +51,11 @@ def run():
             headline_word_list = [headline_word for headline_word in headline_lowercase.split() if headline_word.isalnum()]
 
             if nodeLabel in headline_word_list:
-                nodeAndHeadlineForeignKeyPairingDict.setdefault(nodeLabel, []).append(article["article_id"])
+                nodeAndHeadlineForeignKeyPairingDict.setdefault(nodeLabel, []).append(article_id)
             elif nodeLabel in original_to_non_plural_map:  # Checks the non-plural version of the word to see if it exists there
                 if original_to_non_plural_map.get(nodeLabel) in headline_word_list:
-                    nodeAndHeadlineForeignKeyPairingDict.setdefault(nodeLabel, []).append(article["article_id"])
+                    nodeAndHeadlineForeignKeyPairingDict.setdefault(nodeLabel, []).append(article_id)
+
 
 
 
