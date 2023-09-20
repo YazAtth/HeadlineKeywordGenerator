@@ -27,8 +27,6 @@ def run():
     non_plural_to_original_map: dict[str, str] = top_nouns_and_plural_hash[1]
     original_to_non_plural_map: dict[str, str] = {value: key for key, value in non_plural_to_original_map.items()}
 
-    showing_together_matrix: np.array = MatrixGenerator.get_showing_together_matrix(noun_dict=top_nouns,
-                                                                                    headline_list=headlines)
     adjacency_matrix: np.array = MatrixGenerator.get_adjacency_matrix(noun_dict=top_nouns, headline_list=headlines)
     nodeEdgeJsonString = VisJsParser.get_visjs_graph_object(noun_dict=top_nouns, adjacency_matrix=adjacency_matrix)
 
