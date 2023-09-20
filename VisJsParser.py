@@ -13,14 +13,25 @@ def noun_dict_to_visjs_nodes(noun_dict: dict[str, int]):
 
 
 
-    output: str = "["
+    # output: str = "["
+    output = []
 
     for i, word in enumerate(noun_list):
         number_of_occurrences = noun_dict[word]
         font_size = number_of_occurrences*font_size_multiplier
-        output += f"{{\"id\": {i}, \"label\": \"{word}\", \"font\":{{\"size\": {font_size} }} }},"
 
-    output = output[:-1] + "]"
+        # output += f"{{\"id\": {i}, \"label\": \"{word}\", \"font\":{{\"size\": {font_size} }} }},"
+
+        object = {
+            "id": i,
+            "label": word,
+            "font": {
+                "size": font_size
+            }
+        }
+        output.append(object)
+
+    # output = output[:-1] + "]"
 
     return output
 
@@ -28,7 +39,9 @@ def adjacency_matrix_to_visjs_edges(adjacency_matrix: np.array):
 
     id_counter: int = 0
 
-    output = "["
+    # output = "["
+
+    output = []
 
     for i, row in enumerate(adjacency_matrix):
         for k, column_item in enumerate(row):
@@ -36,21 +49,30 @@ def adjacency_matrix_to_visjs_edges(adjacency_matrix: np.array):
 
             # If a cell is 1 and is not on the diagonal (avoid self loops)
             if (adjacency_matrix[i][k] == 1) and (i is not k):
-                line = f"{{\"from\": {i}, \"to\": {k}, \"id\": \"{i},{k},{id_counter}\"}},"
-                output += line
-
+                object = {
+                    "from": i,
+                    "to": k,
+                    "id": f"{i},{k},{id_counter}"
+                }
+                output.append(object)
                 id_counter += 1
 
-    output = output[:-1] + "]"
+    # output = output[:-1] + "]"
 
     return output
 
 
 def get_visjs_graph_object(noun_dict: dict[str, int], adjacency_matrix: np.array):
-    output: str = "{\n"
-
-    output += "\"nodes\": " + noun_dict_to_visjs_nodes(noun_dict=noun_dict) + ",\n"
-    output += "\"edges\": " + adjacency_matrix_to_visjs_edges(adjacency_matrix=adjacency_matrix) + "\n}"
+    # output: str = "{\n"
+    #
+    # output += "\"nodes\": " + noun_dict_to_visjs_nodes(noun_dict=noun_dict) + ",\n"
+    # output += "\"edges\": " + adjacency_matrix_to_visjs_edges(adjacency_matrix=adjacency_matrix) + "\n}"
 
     # print(sum(noun_dict.values()))
+
+    output = {
+        "nodes": noun_dict_to_visjs_nodes(noun_dict=noun_dict),
+        "edges": adjacency_matrix_to_visjs_edges(adjacency_matrix=adjacency_matrix)
+    }
+
     return output

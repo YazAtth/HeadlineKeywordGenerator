@@ -47,7 +47,7 @@ def run():
 
     # Pair up each node id (representing a keyword from a headline) with the article ids of all of the headlines that it
     # has appeared in and save to the database.
-    nodeList = json.loads(nodeEdgeJsonString)["nodes"]
+    nodeList = nodeEdgeJsonString["nodes"]
     # nodeAndHeadlineForeignKeyPairingList = []
     nodeAndHeadlineForeignKeyPairingDict = {}
 
@@ -97,7 +97,17 @@ def run():
 
     # Pushing to database must happen at the end to preserve atomicity
     articleDbCollection.replaceAllItems(itemList=articleContainer.getArticles())
-    graphDbCollection.replaceAllItems([json.loads(nodeEdgeJsonString)])
+    # graphDbCollection.replaceAllItems([json.loads(nodeEdgeJsonString)])
+
+    with open("sample.txt", "w") as f:
+        json.dump(nodeEdgeJsonString, f)
+
+
+    s3_client.write_to_s3_file(
+        data_string=json.dumps(nodeEdgeJsonString),
+        bucket_name=os.environ["AWS_S3_BUCKET"],
+        key_name="graph-data.json"
+    )
     # nodeAndHeadlineJunctionsDbCollection.replaceAllItems(nodeAndHeadlineForeignKeyPairingList)
     s3_client.write_to_s3_file(
         data_string=json.dumps(nodeAndHeadlineForeignKeyPairingDict),
