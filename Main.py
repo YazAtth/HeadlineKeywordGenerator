@@ -48,15 +48,17 @@ def run():
     # Pair up each node id (representing a keyword from a headline) with the article ids of all of the headlines that it
     # has appeared in and save to the database.
     nodeList = json.loads(nodeEdgeJsonString)["nodes"]
-    nodeAndHeadlineForeignKeyPairingList = []
+    # nodeAndHeadlineForeignKeyPairingList = []
+    nodeAndHeadlineForeignKeyPairingDict = {}
 
+    # TODO: Logic to detect if a key is an empty list and delete the key
     for node in nodeList:
 
-        nodeAndHeadlineForeignKeysObject = {}
+        # nodeAndHeadlineForeignKeysObject = {}
 
         nodeLabel = node["label"].lower()
-        nodeAndHeadlineForeignKeysObject["nodeLabel"] = nodeLabel
-        nodeAndHeadlineForeignKeysObject["relatedArticleIds"] = []
+        # nodeAndHeadlineForeignKeyPairingDict["nodeLabel"] = nodeLabel
+        # nodeAndHeadlineForeignKeyPairingDict["relatedArticleIds"] = []
 
 
         for article in articleContainer.getArticles():
@@ -71,28 +73,37 @@ def run():
 
 
             if nodeLabel in headline_word_list:
-                nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
+                nodeAndHeadlineForeignKeyPairingDict.setdefault(nodeLabel, []).append(article["article_id"])
             elif nodeLabel in original_to_non_plural_map:  # Checks the non-plural version of the word to see if it exists there
                 if original_to_non_plural_map.get(nodeLabel) in headline_word_list:
-                    nodeAndHeadlineForeignKeysObject["relatedArticleIds"].append(article["article_id"])
+                    nodeAndHeadlineForeignKeyPairingDict.setdefault(nodeLabel, []).append(article["article_id"])
 
 
 
 
-        # Ensure no nodes with an empty relatedArticleId is added.
-        if len(nodeAndHeadlineForeignKeysObject["relatedArticleIds"]) > 0:
-            nodeAndHeadlineForeignKeyPairingList.append(nodeAndHeadlineForeignKeysObject)
-        else:
-            print(f"The node: {nodeLabel} has an empty relatedArticleId list")
+        # # Ensure no nodes with an empty relatedArticleId is added.
+        # if len(nodeAndHeadlineForeignKeysObject["relatedArticleIds"]) > 0:
+        #     nodeAndHeadlineForeignKeyPairingList.append(nodeAndHeadlineForeignKeysObject)
+        # else:
+        #     print(f"The node: {nodeLabel} has an empty relatedArticleId list")
 
     nodeAndHeadlineJunctionsDbCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp",
                                                                     collectionName="nodeAndHeadlineJunctions")
+
+    # with open("keyword_to_article_id_hash.json", "w") as f:
+    #     json.dump(nodeAndHeadlineForeignKeyPairingDict, f)
+
 
 
     # Pushing to database must happen at the end to preserve atomicity
     articleDbCollection.replaceAllItems(itemList=articleContainer.getArticles())
     graphDbCollection.replaceAllItems([json.loads(nodeEdgeJsonString)])
-    nodeAndHeadlineJunctionsDbCollection.replaceAllItems(nodeAndHeadlineForeignKeyPairingList)
+    # nodeAndHeadlineJunctionsDbCollection.replaceAllItems(nodeAndHeadlineForeignKeyPairingList)
+    s3_client.write_to_s3_file(
+        data_string=json.dumps(nodeAndHeadlineForeignKeyPairingDict),
+        bucket_name=os.environ["AWS_S3_BUCKET"],
+        key_name="keyword_to_article_id_hash.json"
+    )
 
     # Util collection for debugging
     utilityCollection = MongoDbCollectionHandler(uri=os.environ["URI"], databaseName="StateOfNewsApp", collectionName="utils")
