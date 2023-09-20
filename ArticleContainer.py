@@ -6,7 +6,6 @@ import requests
 import xmltodict
 import json
 
-from MongoDbCollectionHandler import MongoDbCollectionHandler
 from S3Client import S3Client
 
 s3_client = S3Client()

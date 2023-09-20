@@ -3,7 +3,6 @@ import os
 import nltk
 from collections import Counter
 import inflect
-from MongoDbCollectionHandler import MongoDbCollectionHandler
 from S3Client import S3Client
 
 nltk.data.path.append("/tmp")
