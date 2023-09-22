@@ -1,2 +1,6 @@
 .DS_Store
 .idea
+
+download_stopwords.sh
+upload_stopwords.sh
+stop_words.txt

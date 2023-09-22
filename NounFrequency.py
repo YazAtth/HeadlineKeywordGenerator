@@ -111,6 +111,8 @@ def get_top_nouns_and_plural_hash(strings, N):
 
     noun_frequency_tuple_list = noun_frequency_tuple_list_with_no_duplicates  # Update the list
 
+    # Uncomment below if nodes need to be examined
+    # print(dict(noun_frequency_tuple_list))
 
 
     # Return the top N nouns and their frequencies AND the non_plural to original map
