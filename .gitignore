@@ -6,3 +6,4 @@ upload_stopwords.sh
 stop_words.txt
 deploy.sh
 deployment
+allow-resources.sh
