@@ -48,7 +48,14 @@ class ArticleContainer:
 
         for url in self.rssUrlList:
             json_res = self._make_api_request(url)
-            article_list_from_rss_feed = json_res["rss"]["channel"]["item"]
+
+            try:
+                article_list_from_rss_feed = json_res["rss"]["channel"]["item"]
+            except KeyError as e:
+                print(f"Possible broken rss feed link. KeyError:", e)
+                continue
+
+
 
             for article_from_rss_feed in article_list_from_rss_feed:
 
